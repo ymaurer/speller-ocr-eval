@@ -1,0 +1,38 @@
+{
+	"en" : {
+		"hunspell" : {
+			"aff" : "speller/en_GB.aff",
+			"dic" : "speller/en_GB.dic"
+		},
+		"cld" : {
+			"code" : ["en"]
+		}
+	},
+	"lb" : {
+		"hunspell" : {
+			"aff" : "speller/lb_LU.aff",
+			"dic" : "speller/lb_LU.dic"
+		},
+		"cld" : {
+			"code" : ["lb"]
+		}
+	},
+	"fr" : {
+		"hunspell" : {
+			"aff" : "speller/fr.aff",
+			"dic" : "speller/fr.dic"
+		},
+		"cld" : {
+			"code" : ["fr"]
+		}
+	},
+	"de" : {
+		"hunspell" : {
+			"aff" : "speller/de_DE_frami.aff",
+			"dic" : "speller/de_DE_frami.dic"
+		},
+		"cld" : {
+			"code" : ["de"]
+		}
+	}
+}
