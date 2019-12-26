@@ -1,0 +1,15 @@
+{
+	"mappings": {
+		"properties":{
+			"paperid":{"type":"keyword"},
+			"date":{"type":"date"},
+			"year":{"type":"long"},
+			"month":{"type":"long"},
+			"TCHAR":{"type":"long"},
+			"WCHAR":{"type":"long"},
+			"CCHAR":{"type":"long"},
+			"nonwordCHAR":{"type":"long"},
+			"wrongwordCHAR":{"type":"long"}
+		}
+	}
+}
