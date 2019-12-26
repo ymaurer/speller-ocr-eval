@@ -10,3 +10,5 @@ Download https://data.bnl.lu/open-data/digitization/newspapers/export01-newspape
 Using https://github.com/CLD2Owners/cld2/
 ## Spelling
 Using hunspell with dictionaries from Libreoffice and spellchecker.lu
+## Sample results
+![screenshot of results](https://raw.githubusercontent.com/ymaurer/speller-ocr-eval/master/kibana-ocr-overview-bnl-opendata.png)
