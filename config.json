@@ -34,5 +34,23 @@
 		"cld" : {
 			"code" : ["de"]
 		}
+	},
+	"nl" : {
+		"hunspell" : {
+			"aff" : "speller/nl_NL.aff",
+			"dic" : "speller/nl_NL.dic"
+		},
+		"cld" : {
+			"code" : ["nl"]
+		}
+	},
+	"la" : {
+		"hunspell" : {
+			"aff" : "speller/la.aff",
+			"dic" : "speller/la.dic"
+		},
+		"cld" : {
+			"code" : ["la"]
+		}
 	}
 }

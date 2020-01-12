@@ -12,7 +12,8 @@ var reARK = /ark:\/(.*)$/
 var reSource = /.*\/([^\/]*)\/(\d\d\d\d)-(\d\d)-(\d\d)/
 var reLink = /issue:(\d+).*article:(.*)$/;
 // Regular expression for tokenization
-var reToken = /([\-\/\.\'aAáàâÅäÄãæbBcCçdDeEéÉèÈêëËfFgGhHiIíîÎïjJkKlLmMnNńñoOóôöÖœŒpPqQrRsSśßtTuUùûüÜvVwWxXyYÿzZ]*)/g;
+var reToken = /([\-\/\'aAáàâÅäÄãæbBcCçdDeEéÉèÈêëËfFgGhHiIíîÎïjJkKlLmMnNńñoOóôöÖœŒpPqQrRsSśßtTuUùûüÜvVwWxXyYÿzZ]*)/g;
+var reDigits = /[0-9]+/g;
 
 // Good example in French
 // data/export01-newspapers1841-1878/371/3060371/3060371-MODSMD_ARTICLE11-DTL45.xml
@@ -61,20 +62,39 @@ async function loadFileList(fname)
 	return res
 }
 
+function safeGet(xml, xpath, opts)
+{
+	var node = xml.get(xpath, opts);
+	if (node) {
+		return node.text();
+	} else {
+		return "";
+	}
+}
+
 async function evaluateDublinCoreFile(fname, config)
 {
 	var file = await readFile(fname)
 	var xmlDoc = libxml.parseXmlString(file)
-	var desc = xmlDoc.get('//dc:description', { dc : 'http://purl.org/dc/elements/1.1/'}).text()
-	var identifier = xmlDoc.get('//dc:identifier', { dc : 'http://purl.org/dc/elements/1.1/'}).text()
-	var source = xmlDoc.get('//dc:source', { dc : 'http://purl.org/dc/elements/1.1/'}).text()
-	var type = xmlDoc.get('//dc:type', { dc : 'http://purl.org/dc/elements/1.1/'}).text()
-	var link = xmlDoc.get('//dcterms:hasVersion', { dcterms : 'http://purl.org/dc/terms/'}).text()
-	var ark = identifier.match(reARK)[1];
-	var [t, paperid, year, month, day] = source.match(reSource);
-	var [t, pid, article] = link.match(reLink)
+	var desc = safeGet(xmlDoc, '//dc:description', { dc : 'http://purl.org/dc/elements/1.1/'})
+	var identifier = safeGet(xmlDoc, '//dc:identifier', { dc : 'http://purl.org/dc/elements/1.1/'})
+	var source = safeGet(xmlDoc, '//dc:source', { dc : 'http://purl.org/dc/elements/1.1/'})
+	var type = safeGet(xmlDoc, '//dc:type', { dc : 'http://purl.org/dc/elements/1.1/'})
+	var link = safeGet(xmlDoc, '//dcterms:hasVersion', { dcterms : 'http://purl.org/dc/terms/'})
+	var ark = identifier.length ? identifier.match(reARK)[1] : "-";
+	var date = safeGet(xmlDoc, '//dc:date', { dc : 'http://purl.org/dc/elements/1.1/'})
+	var mSource = source.match(reSource)
+	var t, paperid
+	if (mSource) {
+		[t, paperid] = mSource
+	}
+	var mLink = link.match(reLink)
+	var pid, article
+	if (mLink) {
+		[t, pid, article] = mLink
+	}
 
-	var res = [fname, paperid, year, month, day, type, pid, article, ark, desc.length]
+	var res = [fname, paperid, date, type, pid, article, ark, desc.length]
 	var lang
 	try {
 		lang = await cld(desc)
@@ -84,14 +104,15 @@ async function evaluateDublinCoreFile(fname, config)
 		res.push('false')
 	} else {
 		res.push('true', lang.reliable, lang.languages[0].code, lang.languages[0].percent)
+		var tok = simpleTokenizer(desc)
+		var totalWords = tok.length
+		var wordChars = 0
+		var digitChars = countDigits(desc);
 		if (config.hunspell[lang.languages[0].code]) {
 			res.push('true')
 			const speller = config.hunspell[lang.languages[0].code].speller
-			var tok = simpleTokenizer(desc)
 			// console.log('tokenized desc:', desc.length, tok.length, '"' + desc +'"')
 			var correctWords = 0
-			var totalWords = tok.length
-			var wordChars = 0
 			var correctChars = 0
 			for (i in tok) {
 				wordChars += tok[i].length
@@ -102,9 +123,12 @@ async function evaluateDublinCoreFile(fname, config)
 					correctWords++;
 				}
 			}
-			res.push(wordChars, correctChars, totalWords, correctWords)
+			res.push(wordChars, correctChars, digitChars, wordChars - correctChars, desc.length - wordChars - digitChars, totalWords, correctWords)
 		} else {
-			res.push('false')
+			for (i in tok) {
+				wordChars += tok[i].length
+			}
+			res.push('false', wordChars, 0, digitChars, wordChars, desc.length - wordChars - digitChars, totalWords, 0)
 		}
 	}
 	console.log(res.join(' '))
@@ -121,3 +145,16 @@ function simpleTokenizer(text)
 	}
 	return res
 }
+
+function countDigits(text)
+{
+        var arr = [...text.matchAll(reDigits)]
+        var res = 0
+        for (i in arr) {
+                if (arr[i] && arr[i][0]) {
+                        res += arr[i][0].length
+                }
+        }
+        return res;
+}
+
