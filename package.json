@@ -22,5 +22,13 @@
     "cld": "^2.5.1",
     "libxmljs": "^0.19.7",
     "nodehun": "^3.0.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ymaurer/speller-ocr-eval.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ymaurer/speller-ocr-eval/issues"
+  },
+  "homepage": "https://github.com/ymaurer/speller-ocr-eval#readme"
 }
