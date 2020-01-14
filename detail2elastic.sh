@@ -20,5 +20,5 @@ rm -f temp4e*
 split -10000 tempfile4elaastic.json temp4e
 for f in temp4e*; do
         echo "processing $f"
-        curl -X POST "$ELASTICHOST/$INDEXNAME/_bulk?pretty"  -H 'Content-Type: application/json' --data-binary @$f | head
+        curl -X POST "$ELASTICHOST/$INDEXNAME/_bulk?pretty"  -H 'Content-Type: application/json' --data-binary @$f -s | jq '.errors'
 done

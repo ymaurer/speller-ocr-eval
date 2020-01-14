@@ -16,4 +16,4 @@ fi
 
 cat "$1" | awk '{print "{\"index\":{}}\n{\"paperid\":\"" $1 "\",\"date\":\""$2"-"$3"-01\",\"year\":\""$2"\",\"month\":\""$3"\",\"TCHAR\":\""$4"\",\"WCHAR\":\""$5"\",\"CCHAR\":\""$6"\",\"nonwordCHAR\":\""$4-$5"\",\"wrongwordCHAR\":\""$5-$6"\"}"}' > tempfile4elaastic.json
 echo "" >> tempfile4elaastic.json
-curl -X POST "$ELASTICHOST/$INDEXNAME/_bulk?pretty"  -H 'Content-Type: application/json' --data-binary @tempfile4elaastic.json | head
+curl -X POST "$ELASTICHOST/$INDEXNAME/_bulk?pretty"  -H 'Content-Type: application/json' --data-binary @tempfile4elaastic.json -s | jq '.errors'
