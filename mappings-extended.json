@@ -1,0 +1,29 @@
+{
+        "mappings": {
+                "properties":{
+                        "file_name":{"type":"keyword"},
+                        "paperid":{"type":"keyword"},
+                        "date":{"type":"date"},
+                        "article_type":{"type":"keyword"},
+                        "pid":{"type":"keyword"},
+                        "article_id":{"type":"keyword"},
+                        "ark":{"type":"keyword"},
+                        "chars_total":{"type":"long"},
+                        "lang_langid_code":{"type":"keyword"},
+                        "lang_langid_sure":{"type":"long"},
+                        "is_langdetected":{"type":"boolean"},
+                        "is_langreliable":{"type":"boolean"},
+                        "lang_cld2_code":{"type":"keyword"},
+                        "lang_cld2_percent":{"type":"long"},
+                        "is_spellerpresent":{"type":"boolean"},
+                        "chars_inwords":{"type":"long"},
+                        "chars_correct":{"type":"long"},
+                        "chars_indigits":{"type":"long"},
+                        "chars_incorrect":{"type":"long"},
+                        "chars_punctuation":{"type":"long"},
+                        "words_total":{"type":"long"},
+                        "words_correct":{"type":"long"}
+                }
+        }
+}
+
